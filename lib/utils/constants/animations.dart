@@ -1,0 +1,32 @@
+class AppAnimations {
+  static const String sunset = 'assets/animations/sunset.json';
+  static const String darkTheme = 'assets/animations/dark_theme.json';
+  static const String lightTheme = 'assets/animations/light_theme.json';
+  static const String cat1 = 'assets/animations/cat_1.json';
+  static const String error = 'assets/animations/error.json';
+  static const String catBox = 'assets/animations/cat_box.json';
+  static const String catCyber = 'assets/animations/cat_cyber.json';
+  static const String catHappy = 'assets/animations/cat_happy.json';
+  static const String catHide = 'assets/animations/cat_hide.json';
+  static const String catPlay = 'assets/animations/cat_play.json';
+  static const String catRock = 'assets/animations/cat_rock.json';
+  static const String catSearch = 'assets/animations/cat_search.json';
+  static const String catSleep = 'assets/animations/cat_sleep.json';
+  static const String catSocial = 'assets/animations/cat_social.json';
+  static const String catWalk = 'assets/animations/cat_walk.json';
+  static const String party1 = 'assets/animations/party_1.json';
+  static const String party2 = 'assets/animations/party_2.json';
+  static const String party3 = 'assets/animations/party_3.json';
+  static const String party4 = 'assets/animations/party_4.json';
+  static const String party5 = 'assets/animations/party_5.json';
+  static const String party6 = 'assets/animations/party_6.json';
+  static const String walker1 = 'assets/animations/walker_1.json';
+  static const String map1 = 'assets/animations/map_1.json';
+  static const String lama = 'assets/animations/lama.json';
+  static const String point1 = 'assets/animations/point_1.json';
+  static const String point2 = 'assets/animations/point_2.json';
+  static const String point3 = 'assets/animations/point_3.json';
+  static const String point4 = 'assets/animations/point_4.json';
+  static const String point5 = 'assets/animations/point_5.json';
+  static const String point6 = 'assets/animations/point_6.json';
+}
