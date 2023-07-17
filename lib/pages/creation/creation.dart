@@ -7,14 +7,14 @@ import 'package:get/get.dart';
 import '../../mixins/utils.dart';
 import '../../models/marker.dart';
 import '../../utils/constants/colors.dart';
+import '../../utils/theme/app_text_theme.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_scaffold.dart';
 import '../../widgets/lite_loading_screen.dart';
 import 'controller.dart';
-import 'widgets/creation_dialog.dart';
-import 'widgets/price_card.dart';
 
 class CreationScreen extends StatefulWidget {
+  final String id;
   final String name;
   final String date;
   final String place;
@@ -23,6 +23,7 @@ class CreationScreen extends StatefulWidget {
 
   const CreationScreen({
     Key? key,
+    required this.id,
     required this.name,
     required this.date,
     required this.place,
@@ -47,7 +48,8 @@ class CreationScreenState extends State<CreationScreen> with TickerProviderState
     edition = false;
     super.initState();
     initGrid();
-
+    controller.getAllMarkersByConcertId(widget.id);
+    controller.getGridByConcertId(widget.id);
     animationController = AnimationController(vsync: this);
   }
 
@@ -84,159 +86,182 @@ class CreationScreenState extends State<CreationScreen> with TickerProviderState
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        child: Row(
-                          children: [
-                            Column(
-                              // mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const SizedBox(height: 24),
-                                Text(
-                                  'Цены:',
-                                  style: Get.textTheme.bodyText1,
-                                ),
-                                const SizedBox(height: 16),
-                                Card(
-                                  elevation: 5,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Row(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '  Cоздать метку:',
-                                              style: Get.textTheme.bodyText2,
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(width: 36),
-                                        InkWell(
-                                          onTap: () {
-                                            Get.defaultDialog(
-                                              title: '  Создание метки  ',
-                                              titleStyle: Get.textTheme.bodyText1,
-                                              content: const CreationDialogWidget(),
-                                            );
-                                          },
-                                          child: const Card(
-                                            color: Colors.greenAccent,
-                                            child: SizedBox(
-                                              height: 48,
-                                              width: 48,
-                                              child: Icon(
-                                                Icons.add,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 24),
-                                for (MarkerModel price in controller.prices)
-                                  PriceCardWidget(
-                                    price: price,
-                                    selectedPrice: controller.selectedPrice,
-                                    selectPrice: (price) => controller.selectPrice(price),
-                                    onDeletePrice: (price) => controller.removePrice(price),
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
                       SizedBox(width: 24),
                       Column(
                         children: [
-                          SizedBox(height: 24),
-                          Card(
-                            child: Container(
-                              width: 220,
-                              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                              // color: AppColors.LIGHT_GREY,
-                              child: Column(
-                                children: [
-                                  // Row(
-                                  //   children: [
-                                  //     Text(controller.selectedPrice.toString(), style: Get.textTheme.bodyText1),
-                                  //   ],
-                                  // ),
-                                  Row(
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: FloatingActionButton.extended(
+                                  backgroundColor: AppColors.WHITE,
+                                  onPressed: () {},
+                                  label: Row(
                                     children: [
-                                      Text('id:', style: Get.textTheme.bodyText1),
-                                      Text(controller.hoveredPrice?.id ?? '---', style: Get.textTheme.bodyText2),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text('Имя:', style: Get.textTheme.bodyText1),
-                                      Text(controller.hoveredPrice?.name ?? '---', style: Get.textTheme.bodyText2),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text('Цена:', style: Get.textTheme.bodyText1),
-                                      Text(controller.hoveredPrice?.price ?? '---', style: Get.textTheme.bodyText2),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text('X: ', style: Get.textTheme.bodyText1),
-                                      Text(
-                                        controller.hoveredPrice?.row.toString() ?? '---',
-                                        style: Get.textTheme.bodyText2,
+                                      Icon(
+                                        Icons.circle,
+                                        color: AppColors.BLUE,
                                       ),
-                                      Text('  Y:', style: Get.textTheme.bodyText1),
+                                      SizedBox(width: 8),
                                       Text(
-                                        controller.hoveredPrice?.column.toString() ?? '---',
-                                        style: Get.textTheme.bodyText2,
+                                        '20\$',
+                                        style: Get.textTheme.bodyText1Bold,
                                       ),
                                     ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: FloatingActionButton.extended(
+                                  backgroundColor: AppColors.WHITE,
+                                  onPressed: () {},
+                                  label: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.circle,
+                                        color: AppColors.PURPLE,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        '35\$',
+                                        style: Get.textTheme.bodyText1Bold,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: FloatingActionButton.extended(
+                                  backgroundColor: AppColors.WHITE,
+                                  onPressed: () {},
+                                  label: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.circle,
+                                        color: AppColors.ORANGE,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        '50\$',
+                                        style: Get.textTheme.bodyText1Bold,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
+                          SizedBox(height: 24),
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 12),
                             child: SingleChildScrollView(
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const SizedBox(height: 0),
-                                    // for (List<MarkerModel?> x in controller.grid)
-                                    for (var incrX = 0; incrX < controller.grid.length; incrX++)
-                                      Row(
-                                        children: [
-                                          // for (MarkerModel? y in x)
-                                          for (var incrY = 0; incrY < controller.grid[incrX].length; incrY++)
-                                            PlaceWidget(
-                                              editing: edition && controller.selectedPrice != null,
-                                              onHover: (marker) {
-                                                controller.hoverItem(marker);
-                                              },
-                                              onSelect: (marker) {
-                                                controller.setGridElement(
-                                                  incrX,
-                                                  incrY,
-                                                  marker,
-                                                );
+                                    const SizedBox(height: 24),
+                                    Text(
+                                      'Концертный зал:',
+                                      style: Get.textTheme.headline3Bold,
+                                    ),
+                                    const SizedBox(height: 16),
 
-                                                // log((marker?.row).toString());
-                                              },
-                                              currentMarker: controller.grid[incrX][incrY],
-                                              marker: controller.selectedPrice,
-                                              x: controller.grid[incrX][incrY]?.row ?? 0,
-                                              y: controller.grid[incrX][incrY]?.column ?? 0,
-                                            ),
-                                        ],
+                                    // Card(
+                                    //   child: Container(
+                                    //     width: 220,
+                                    //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    //     // color: AppColors.LIGHT_GREY,
+                                    //     child: Column(
+                                    //       children: [
+                                    //         // Row(
+                                    //         //   children: [
+                                    //         //     Text(controller.selectedPrice.toString(), style: Get.textTheme.bodyText1),
+                                    //         //   ],
+                                    //         // ),
+                                    //         Row(
+                                    //           children: [
+                                    //             Text('id:', style: Get.textTheme.bodyText1),
+                                    //             Text(controller.hoveredPrice?.id ?? '---', style: Get.textTheme.bodyText2),
+                                    //           ],
+                                    //         ),
+                                    //         Row(
+                                    //           children: [
+                                    //             Text('Имя:', style: Get.textTheme.bodyText1),
+                                    //             Text(controller.hoveredPrice?.name ?? '---', style: Get.textTheme.bodyText2),
+                                    //           ],
+                                    //         ),
+                                    //         Row(
+                                    //           children: [
+                                    //             Text('Цена:', style: Get.textTheme.bodyText1),
+                                    //             Text(controller.hoveredPrice?.price ?? '---', style: Get.textTheme.bodyText2),
+                                    //           ],
+                                    //         ),
+                                    //         Row(
+                                    //           children: [
+                                    //             Text('Место:x ', style: Get.textTheme.bodyText1),
+                                    //             Text(
+                                    //               controller.hoveredPrice?.x.toString() ?? '---',
+                                    //               style: Get.textTheme.bodyText2,
+                                    //             ),
+                                    //             Text('  Ряд:y ', style: Get.textTheme.bodyText1),
+                                    //             Text(
+                                    //               controller.hoveredPrice?.y.toString() ?? '---',
+                                    //               style: Get.textTheme.bodyText2,
+                                    //             ),
+                                    //           ],
+                                    //         ),
+                                    //       ],
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                    Container(
+                                      width: 520,
+                                      height: 520,
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.vertical,
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: [
+                                              const SizedBox(height: 0),
+                                              // for (List<MarkerModel?> x in controller.grid)
+                                              for (var incrX = 0; incrX < controller.grid.length; incrX++)
+                                                Column(
+                                                  children: [
+                                                    // for (MarkerModel? y in x)
+                                                    for (var incrY = 0; incrY < controller.grid[incrX].length; incrY++)
+                                                      PlaceWidget(
+                                                        editing: edition && controller.selectedPrice != null,
+                                                        onHover: (marker) {
+                                                          controller.hoverItem(marker);
+                                                        },
+                                                        onSelect: (marker) {
+                                                          controller.setGridElement(
+                                                            incrX,
+                                                            incrY,
+                                                            marker,
+                                                          );
+
+                                                          // log((marker?.row).toString());
+                                                        },
+                                                        currentMarker: controller.grid[incrX][incrY],
+                                                        marker: controller.selectedPrice,
+                                                        x: controller.grid[incrX][incrY]?.x ?? 0,
+                                                        y: controller.grid[incrX][incrY]?.y ?? 0,
+                                                      ),
+                                                  ],
+                                                ),
+                                              const SizedBox(height: 72),
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                    const SizedBox(height: 72),
+                                    ),
+                                    const SizedBox(height: 12),
                                   ],
                                 ),
                               ),
@@ -281,7 +306,7 @@ class _PlaceWidgetState extends State<PlaceWidget> {
     return GestureDetector(
       onTap: () {
         if (widget.marker == null) {
-          Get.snackbar('Внимание', 'Создай метку слева');
+          // Get.snackbar('Внимание', 'Создай метку слева');
         } else {
           widget.onSelect(widget.marker);
         }
@@ -290,7 +315,7 @@ class _PlaceWidgetState extends State<PlaceWidget> {
         onEnter: (event) {
           if (widget.editing) {
             if (widget.marker == null) {
-              Get.snackbar('Внимание', 'Создай метку слева');
+              // Get.snackbar('Внимание', 'Создай метку слева');
             } else {
               widget.onSelect(widget.marker);
             }
@@ -301,10 +326,6 @@ class _PlaceWidgetState extends State<PlaceWidget> {
             widget.onHover(widget.currentMarker);
           }
         },
-        // onHover: (event) {
-
-        //   widget.onHover(widget.marker);
-        // },
         cursor: SystemMouseCursors.grab,
         child: widget.editing
             ? SizedBox(
@@ -317,21 +338,53 @@ class _PlaceWidgetState extends State<PlaceWidget> {
                     if (widget.currentMarker?.type == null)
                       Container(
                         alignment: Alignment.center,
-                        height: 7,
-                        width: 7,
+                        height: 25,
+                        width: 25,
                         decoration: BoxDecoration(
-                          color: widget.currentMarker?.color ?? Colors.grey,
-                          borderRadius: BorderRadius.circular(100),
+                          // color: widget.currentMarker?.color ?? Colors.grey,
+                          border: Border.all(
+                            color: widget.currentMarker?.color ?? Colors.grey,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              'x:${widget.x + 1}',
+                              style: TextStyle(color: AppColors.DARK, fontSize: 6),
+                            ),
+                            Text(
+                              'y:${widget.y + 1}',
+                              style: TextStyle(color: AppColors.DARK, fontSize: 6),
+                            ),
+                          ],
                         ),
                       )
                     else
                       Container(
                         alignment: Alignment.center,
-                        height: 15,
-                        width: 15,
+                        height: 25,
+                        width: 25,
                         decoration: BoxDecoration(
-                          color: widget.currentMarker?.color ?? Colors.grey,
-                          borderRadius: BorderRadius.circular(100),
+                          // color: widget.currentMarker?.color ?? Colors.grey,
+                          border: Border.all(
+                            color: widget.currentMarker?.color ?? Colors.grey,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              'x:${widget.x + 1}',
+                              style: TextStyle(color: AppColors.DARK, fontSize: 6),
+                            ),
+                            Text(
+                              'y:${widget.y + 1}',
+                              style: TextStyle(color: AppColors.DARK, fontSize: 6),
+                            ),
+                          ],
                         ),
                       ),
                   ],

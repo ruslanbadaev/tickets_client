@@ -56,127 +56,131 @@ class ConcertsScreenState extends State<ConcertsScreen> with TickerProviderState
                 body: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 24),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          alignment: Alignment.center,
-                          height: 64,
-                          width: 800,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: 180,
-                                child: Text(
-                                  'Название',
-                                  style: Get.textTheme.bodyText1Bold,
+                    SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 24),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
+                            alignment: Alignment.center,
+                            height: 64,
+                            width: 800,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: 180,
+                                  child: Text(
+                                    'Название',
+                                    style: Get.textTheme.bodyText1Bold,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 180,
-                                child: Text(
-                                  'Дата',
-                                  style: Get.textTheme.bodyText1Bold,
+                                SizedBox(
+                                  width: 180,
+                                  child: Text(
+                                    'Дата',
+                                    style: Get.textTheme.bodyText1Bold,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 180,
-                                child: Text(
-                                  'Место',
-                                  style: Get.textTheme.bodyText1Bold,
+                                SizedBox(
+                                  width: 180,
+                                  child: Text(
+                                    'Место',
+                                    style: Get.textTheme.bodyText1Bold,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 90,
-                                child: Text(
-                                  'Время',
-                                  style: Get.textTheme.bodyText1Bold,
+                                SizedBox(
+                                  width: 90,
+                                  child: Text(
+                                    'Время',
+                                    style: Get.textTheme.bodyText1Bold,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 128),
-                            ],
+                                SizedBox(width: 133),
+                              ],
+                            ),
                           ),
-                        ),
-                        for (ConcertModel concert in controller.allConcerts)
-                          Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  Get.to(
-                                    CreationScreen(
-                                      name: concert.name,
-                                      date: concert.createdAt.toString(),
-                                      place: concert.place,
-                                      rows: int.tryParse(concert.row ?? '') ?? 10,
-                                      columns: int.tryParse(concert.column ?? '') ?? 10,
-                                    ),
-                                  );
-                                },
-                                child: Card(
-                                  margin: const EdgeInsets.symmetric(vertical: 6),
-                                  color: AppColors.WHITE,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                                    alignment: Alignment.center,
-                                    height: 64,
-                                    width: 800,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        SizedBox(
-                                          width: 180,
-                                          child: Text(
-                                            concert.name,
-                                            style: Get.textTheme.bodyText1Bold,
+                          for (ConcertModel concert in controller.allConcerts)
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Get.to(
+                                      CreationScreen(
+                                        id: concert.id,
+                                        name: concert.name,
+                                        date: concert.createdAt.toString(),
+                                        place: concert.place,
+                                        rows: int.tryParse(concert.row ?? '') ?? 10,
+                                        columns: int.tryParse(concert.column ?? '') ?? 10,
+                                      ),
+                                    );
+                                  },
+                                  child: Card(
+                                    margin: const EdgeInsets.symmetric(vertical: 6),
+                                    color: AppColors.WHITE,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                                      alignment: Alignment.center,
+                                      height: 96,
+                                      width: 800,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width: 180,
+                                            child: Text(
+                                              concert.name,
+                                              style: Get.textTheme.bodyText1Bold,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 180,
-                                          child: Text(
-                                            DateFormatter.formattedDateTime(concert.createdAt!, pattern: 'dd.MM.yyyy'),
-                                            style: Get.textTheme.bodyText1,
+                                          SizedBox(
+                                            width: 180,
+                                            child: Text(
+                                              DateFormatter.formattedDateTime(concert.createdAt!,
+                                                  pattern: 'dd.MM.yyyy'),
+                                              style: Get.textTheme.bodyText1,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 180,
-                                          child: Text(
-                                            concert.place.toString(),
-                                            style: Get.textTheme.bodyText1Bold,
+                                          SizedBox(
+                                            width: 180,
+                                            child: Text(
+                                              concert.place.toString(),
+                                              style: Get.textTheme.bodyText1Bold,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 90,
-                                          child: Text(
-                                            DateFormatter.formattedDateTime(concert.createdAt!, pattern: 'hh:mm'),
-                                            style: Get.textTheme.bodyText1Bold,
+                                          SizedBox(
+                                            width: 90,
+                                            child: Text(
+                                              DateFormatter.formattedDateTime(concert.createdAt!, pattern: 'hh:mm'),
+                                              style: Get.textTheme.bodyText1Bold,
+                                            ),
                                           ),
-                                        ),
-                                        Card(
-                                          color: AppColors.LIGHT_GREEN,
-                                          child: SizedBox(
-                                            width: 120,
-                                            height: 48,
-                                            child: Center(
-                                              child: Text(
-                                                'Купить',
-                                                style: Get.textTheme.bodyText2Bold.copyWith(
-                                                  color: AppColors.WHITE,
+                                          Card(
+                                            color: AppColors.LIGHT_GREEN,
+                                            child: SizedBox(
+                                              width: 120,
+                                              height: 48,
+                                              child: Center(
+                                                child: Text(
+                                                  'Купить',
+                                                  style: Get.textTheme.bodyText2Bold.copyWith(
+                                                    color: AppColors.WHITE,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                      ],
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

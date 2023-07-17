@@ -7,7 +7,6 @@
 //   final String name;
 //   final Color color;
 //   final PointType type;
-
 //   final String? price;
 
 //   PriceModel({
@@ -17,4 +16,24 @@
 //     required this.type,
 //     this.price,
 //   });
+
+//   static Map<String, dynamic> toJson(PriceModel price) {
+//     return {
+//       'id': price.id,
+//       'name': price.name,
+//       'color': price.color,
+//       'type': price.type,
+//       'price': price.price,
+//     };
+//   }
+
+//   static Future<PriceModel> fromJson(Map<String, dynamic> json) async {
+//     return PriceModel(
+//       id: json['id'] ?? '??',
+//       name: json['name'] ?? '??',
+//       color: json['color'] ?? '??',
+//       type: json['type'] ?? '??',
+//       price: json['price'] ?? '??',
+//     );
+//   }
 // }

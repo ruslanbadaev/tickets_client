@@ -11,6 +11,8 @@ class ConcertModel {
   final DateTime? createdAt;
   final String? row;
   final String? column;
+  final List? grid;
+  final List? prices;
 
   ConcertModel({
     required this.id,
@@ -19,6 +21,8 @@ class ConcertModel {
     required this.createdAt,
     required this.row,
     required this.column,
+    required this.grid,
+    required this.prices,
   });
 
   static Future<ResultModel> save(Map<String, dynamic> json) async {
@@ -112,16 +116,36 @@ class ConcertModel {
       return ResultModel(
         status: ResultStatus.success,
         data: ConcertModel(
-          id: data?['id'] ?? '??',
+          // id: data?['id'] ?? '??',
+          id: snapshot.id,
           name: data?['name'] ?? '??',
           place: data?['place'] ?? '??',
           createdAt: DateTime.tryParse((data?['createdAt'] ?? '')),
-          row: data?['row'] ?? '??',
-          column: data?['column'] ?? '??',
+          row: data?['row'].toString(),
+          column: data?['column'].toString(),
+          grid: data?['grid'],
+          prices: data?['prices'],
         ),
       );
     } catch (e) {
       log(e.toString());
+      return ResultModel(
+        status: ResultStatus.error,
+        message: e.toString(),
+      );
+    }
+  }
+
+  static Future<ResultModel> update(String id, Map<String, dynamic> json) async {
+    try {
+      log(id.toString());
+      final collection = FirebaseFirestore.instance.collection('concerts');
+      await collection.doc(id).update(json);
+
+      return ResultModel(
+        status: ResultStatus.success,
+      );
+    } catch (e) {
       return ResultModel(
         status: ResultStatus.error,
         message: e.toString(),
@@ -149,7 +173,7 @@ class ConcertModel {
   @override
   String toString() {
     return '''
-      Recipient{
+      ConcertModel{
         id: $id, 
         name: $name, 
         place: $place,
