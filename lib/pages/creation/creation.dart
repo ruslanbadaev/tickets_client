@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,11 +42,14 @@ class CreationScreenState extends State<CreationScreen> with TickerProviderState
   int currSeconds = 0;
   bool edition = false;
 
+  MarkerModel? _currentPrice;
+  final List<MarkerModel> _selectedMarkers = [];
+
   CreationScreenController controller = Get.put(CreationScreenController());
 
   @override
   void initState() {
-    edition = false;
+    edition = true;
     super.initState();
     initGrid();
     controller.getAllMarkersByConcertId(widget.id);
@@ -68,208 +72,224 @@ class CreationScreenState extends State<CreationScreen> with TickerProviderState
         return controller.isLoading
             ? const LiteLoadingScreen()
             : GestureDetector(
-                onLongPressStart: (_) {
-                  log('llklklkl1');
-                  setState(() {
-                    edition = true;
-                  });
-                },
-                onLongPressEnd: (_) {
-                  setState(() {
-                    edition = false;
-                  });
-                },
+                // onLongPressStart: (_) {
+                //   log('llklklkl1');
+                //   setState(() {
+                //     edition = true;
+                //   });
+                // },
+                // onLongPressEnd: (_) {
+                //   setState(() {
+                //     edition = false;
+                //   });
+                // },
                 child: CustomScaffold(
                   appBar: CustomAppBar(titleString: '${widget.name} - ${widget.date} (${widget.place})'),
                   backgroundColor: AppColors.WHITE,
-                  body: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(width: 24),
-                      Column(
+                  body: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: SingleChildScrollView(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12),
-                                child: FloatingActionButton.extended(
-                                  backgroundColor: AppColors.WHITE,
-                                  onPressed: () {},
-                                  label: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.circle,
-                                        color: AppColors.BLUE,
-                                      ),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        '20\$',
-                                        style: Get.textTheme.bodyText1Bold,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12),
-                                child: FloatingActionButton.extended(
-                                  backgroundColor: AppColors.WHITE,
-                                  onPressed: () {},
-                                  label: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.circle,
-                                        color: AppColors.PURPLE,
-                                      ),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        '35\$',
-                                        style: Get.textTheme.bodyText1Bold,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12),
-                                child: FloatingActionButton.extended(
-                                  backgroundColor: AppColors.WHITE,
-                                  onPressed: () {},
-                                  label: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.circle,
-                                        color: AppColors.ORANGE,
-                                      ),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        '50\$',
-                                        style: Get.textTheme.bodyText1Bold,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 24),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 12),
-                            child: SingleChildScrollView(
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
+                          if (_selectedMarkers.isNotEmpty)
+                            FadeInLeft(
+                              duration: const Duration(milliseconds: 300),
+                              child: Container(
+                                // height: 200,
+                                // width: 200,
+                                // color: AppColors.GREEN,
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const SizedBox(height: 24),
-                                    Text(
-                                      'Концертный зал:',
-                                      style: Get.textTheme.headline3Bold,
-                                    ),
-                                    const SizedBox(height: 16),
-
-                                    // Card(
-                                    //   child: Container(
-                                    //     width: 220,
-                                    //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                    //     // color: AppColors.LIGHT_GREY,
-                                    //     child: Column(
-                                    //       children: [
-                                    //         // Row(
-                                    //         //   children: [
-                                    //         //     Text(controller.selectedPrice.toString(), style: Get.textTheme.bodyText1),
-                                    //         //   ],
-                                    //         // ),
-                                    //         Row(
-                                    //           children: [
-                                    //             Text('id:', style: Get.textTheme.bodyText1),
-                                    //             Text(controller.hoveredPrice?.id ?? '---', style: Get.textTheme.bodyText2),
-                                    //           ],
-                                    //         ),
-                                    //         Row(
-                                    //           children: [
-                                    //             Text('Имя:', style: Get.textTheme.bodyText1),
-                                    //             Text(controller.hoveredPrice?.name ?? '---', style: Get.textTheme.bodyText2),
-                                    //           ],
-                                    //         ),
-                                    //         Row(
-                                    //           children: [
-                                    //             Text('Цена:', style: Get.textTheme.bodyText1),
-                                    //             Text(controller.hoveredPrice?.price ?? '---', style: Get.textTheme.bodyText2),
-                                    //           ],
-                                    //         ),
-                                    //         Row(
-                                    //           children: [
-                                    //             Text('Место:x ', style: Get.textTheme.bodyText1),
-                                    //             Text(
-                                    //               controller.hoveredPrice?.x.toString() ?? '---',
-                                    //               style: Get.textTheme.bodyText2,
-                                    //             ),
-                                    //             Text('  Ряд:y ', style: Get.textTheme.bodyText1),
-                                    //             Text(
-                                    //               controller.hoveredPrice?.y.toString() ?? '---',
-                                    //               style: Get.textTheme.bodyText2,
-                                    //             ),
-                                    //           ],
-                                    //         ),
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    // ),
-                                    Container(
-                                      width: 520,
-                                      height: 520,
-                                      padding: const EdgeInsets.symmetric(vertical: 12),
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.vertical,
-                                        child: SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
+                                    for (MarkerModel? ticket in _selectedMarkers)
+                                      FadeInLeft(
+                                        duration: const Duration(milliseconds: 300),
+                                        child: Container(
+                                          width: 140,
+                                          height: 48,
                                           child: Row(
                                             children: [
-                                              const SizedBox(height: 0),
-                                              // for (List<MarkerModel?> x in controller.grid)
-                                              for (var incrX = 0; incrX < controller.grid.length; incrX++)
-                                                Column(
-                                                  children: [
-                                                    // for (MarkerModel? y in x)
-                                                    for (var incrY = 0; incrY < controller.grid[incrX].length; incrY++)
-                                                      PlaceWidget(
-                                                        editing: edition && controller.selectedPrice != null,
-                                                        onHover: (marker) {
-                                                          controller.hoverItem(marker);
-                                                        },
-                                                        onSelect: (marker) {
-                                                          controller.setGridElement(
-                                                            incrX,
-                                                            incrY,
-                                                            marker,
-                                                          );
-
-                                                          // log((marker?.row).toString());
-                                                        },
-                                                        currentMarker: controller.grid[incrX][incrY],
-                                                        marker: controller.selectedPrice,
-                                                        x: controller.grid[incrX][incrY]?.x ?? 0,
-                                                        y: controller.grid[incrX][incrY]?.y ?? 0,
-                                                      ),
-                                                  ],
+                                              Text(
+                                                ticket?.name ?? '?',
+                                                style: Get.textTheme.bodyText1Bold.copyWith(
+                                                  // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                                  fontWeight: _currentPrice == null ? FontWeight.w700 : FontWeight.w400,
                                                 ),
-                                              const SizedBox(height: 72),
+                                              ),
+                                              SizedBox(width: 8),
+                                              Text(
+                                                '(${ticket?.price ?? '?'})',
+                                                style: Get.textTheme.bodyText1Bold.copyWith(
+                                                  // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                                  fontWeight: _currentPrice == null ? FontWeight.w700 : FontWeight.w400,
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 12),
                                   ],
                                 ),
                               ),
                             ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 24),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  for (MarkerModel price in controller.prices)
+                                    if (price.type == PointType.object)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                                        child: FloatingActionButton.extended(
+                                          backgroundColor: AppColors.LIGHT.withOpacity(1),
+                                          onPressed: () {
+                                            if (_currentPrice == price) {
+                                              _currentPrice = null;
+                                            } else {
+                                              _currentPrice = price;
+                                            }
+                                            setState(() {});
+                                          },
+                                          label: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.circle,
+                                                color: price.color,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                price.name,
+                                                style: Get.textTheme.bodyText1Bold.copyWith(
+                                                  color: AppColors.LIGHT_GREY.withOpacity(1),
+                                                  fontWeight:
+                                                      _currentPrice == price ? FontWeight.w700 : FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    else
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                                        child: FloatingActionButton.extended(
+                                          backgroundColor: AppColors.WHITE,
+                                          onPressed: () {
+                                            if (_currentPrice == price) {
+                                              _currentPrice = null;
+                                            } else {
+                                              _currentPrice = price;
+                                            }
+                                            setState(() {});
+                                          },
+                                          label: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.circle,
+                                                color: price.color,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                price.price ?? '?',
+                                                style: Get.textTheme.bodyText1Bold.copyWith(
+                                                  // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                                  fontWeight:
+                                                      _currentPrice == price ? FontWeight.w700 : FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                ],
+                              ),
+                              const SizedBox(height: 36),
+                              Container(
+                                // width: 520,
+                                // height: 520,
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(height: 0),
+                                      // for (List<MarkerModel?> x in controller.grid)
+
+                                      for (var incrX = 0; incrX < controller.grid.length; incrX++)
+                                        Column(
+                                          children: [
+                                            // for (MarkerModel? y in x)
+                                            for (var incrY = 0; incrY < controller.grid[incrX].length; incrY++)
+                                              if (_currentPrice == null)
+                                                PlaceWidget(
+                                                  editing: edition && controller.selectedPrice != null,
+                                                  onHover: (marker) {
+                                                    controller.hoverItem(marker);
+                                                  },
+                                                  onSelect: (marker) {
+                                                    if (_selectedMarkers.contains(controller.grid[incrX][incrY])) {
+                                                      _selectedMarkers.remove(controller.grid[incrX][incrY]);
+                                                    } else {
+                                                      _selectedMarkers.add(controller.grid[incrX][incrY]);
+                                                    }
+                                                    setState(() {});
+                                                    // log((marker?.row).toString());
+                                                  },
+                                                  currentMarker: controller.grid[incrX][incrY],
+                                                  marker: controller.selectedPrice,
+                                                  x: controller.grid[incrX][incrY].x ?? 0,
+                                                  y: controller.grid[incrX][incrY].y ?? 0,
+                                                  selected: _selectedMarkers.contains(controller.grid[incrX][incrY]),
+                                                  booked: false,
+                                                )
+                                              else
+                                                PlaceWidget(
+                                                  editing: edition && controller.selectedPrice != null,
+                                                  onHover: (marker) {
+                                                    controller.hoverItem(marker);
+                                                  },
+                                                  onSelect: (marker) {
+                                                    // controller.setGridElement(
+                                                    //   incrX,
+                                                    //   incrY,
+                                                    //   marker,
+                                                    // );
+
+                                                    if (_selectedMarkers.contains(controller.grid[incrX][incrY])) {
+                                                      _selectedMarkers.remove(controller.grid[incrX][incrY]);
+                                                    } else {
+                                                      _selectedMarkers.add(controller.grid[incrX][incrY]);
+                                                    }
+                                                    setState(() {});
+                                                  },
+                                                  currentMarker:
+                                                      _currentPrice?.name != controller.grid[incrX][incrY].name
+                                                          ? null
+                                                          : controller.grid[incrX][incrY],
+                                                  marker: controller.selectedPrice,
+                                                  x: controller.grid[incrX][incrY].x ?? 0,
+                                                  y: controller.grid[incrX][incrY].y ?? 0,
+                                                  selected: _selectedMarkers.contains(controller.grid[incrX][incrY]),
+                                                  booked: false,
+                                                )
+                                          ],
+                                        ),
+
+                                      const SizedBox(height: 72),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               );
@@ -286,12 +306,17 @@ class PlaceWidget extends StatefulWidget {
   final bool editing;
   final int x;
   final int y;
+  final bool selected;
+  final bool booked;
+
   const PlaceWidget({
     required this.editing,
     required this.onHover,
     required this.onSelect,
     required this.x,
     required this.y,
+    required this.selected,
+    required this.booked,
     this.marker,
     this.currentMarker,
     Key? key,
@@ -305,149 +330,68 @@ class _PlaceWidgetState extends State<PlaceWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (widget.marker == null) {
-          // Get.snackbar('Внимание', 'Создай метку слева');
+        log(widget.currentMarker?.name ?? '??', name: 'widget.currentMarker before');
+        if (widget.currentMarker == null) {
+          //!
         } else {
-          widget.onSelect(widget.marker);
+          log(widget.currentMarker?.name ?? '??', name: 'widget.currentMarker');
+          widget.onSelect(widget.currentMarker);
+          setState(() {});
         }
       },
       child: MouseRegion(
-        onEnter: (event) {
-          if (widget.editing) {
-            if (widget.marker == null) {
-              // Get.snackbar('Внимание', 'Создай метку слева');
-            } else {
-              widget.onSelect(widget.marker);
-            }
-            // setState(() {
-            //   currentMarker = widget.marker;
-            // });
-          } else {
-            widget.onHover(widget.currentMarker);
-          }
-        },
         cursor: SystemMouseCursors.grab,
-        child: widget.editing
-            ? SizedBox(
-                height: 25,
-                width: 25,
-                // margin: EdgeInsets.all(0),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    if (widget.currentMarker?.type == null)
-                      Container(
-                        alignment: Alignment.center,
-                        height: 25,
-                        width: 25,
-                        decoration: BoxDecoration(
-                          // color: widget.currentMarker?.color ?? Colors.grey,
-                          border: Border.all(
-                            color: widget.currentMarker?.color ?? Colors.grey,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'x:${widget.x + 1}',
-                              style: TextStyle(color: AppColors.DARK, fontSize: 6),
-                            ),
-                            Text(
-                              'y:${widget.y + 1}',
-                              style: TextStyle(color: AppColors.DARK, fontSize: 6),
-                            ),
-                          ],
-                        ),
-                      )
-                    else
-                      Container(
-                        alignment: Alignment.center,
-                        height: 25,
-                        width: 25,
-                        decoration: BoxDecoration(
-                          // color: widget.currentMarker?.color ?? Colors.grey,
-                          border: Border.all(
-                            color: widget.currentMarker?.color ?? Colors.grey,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'x:${widget.x + 1}',
-                              style: TextStyle(color: AppColors.DARK, fontSize: 6),
-                            ),
-                            Text(
-                              'y:${widget.y + 1}',
-                              style: TextStyle(color: AppColors.DARK, fontSize: 6),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-              )
-            : Stack(
+        child: Stack(
+          children: [
+            Container(
+              height: 25,
+              width: 25,
+              // margin: EdgeInsets.all(0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    // decoration: BoxDecoration(
-                    //   border: Border.all(
-                    //     color: AppColors.DARK,
-                    //     width: 2,
-                    //   ),
-                    // ),
-                    height: 25,
-                    width: 25,
-                    // margin: EdgeInsets.all(0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (widget.currentMarker?.type == null)
-                          Container(
+                  if (widget.currentMarker?.type == null)
+                    Container(
+                      alignment: Alignment.center,
+                      height: 7,
+                      width: 7,
+                      decoration: BoxDecoration(
+                        color: widget.currentMarker?.color ?? Colors.grey,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                    )
+                  else
+                    widget.currentMarker?.type == PointType.sit
+                        ? Container(
                             alignment: Alignment.center,
-                            height: 7,
-                            width: 7,
+                            height: 15,
+                            width: 15,
                             decoration: BoxDecoration(
                               color: widget.currentMarker?.color ?? Colors.grey,
                               borderRadius: BorderRadius.circular(100),
+                              border: widget.selected ? Border.all(width: 2) : null,
                             ),
                           )
-                        else
-                          widget.currentMarker?.type == PointType.sit
-                              ? Container(
-                                  alignment: Alignment.center,
-                                  height: 15,
-                                  width: 15,
-                                  decoration: BoxDecoration(
-                                    color: widget.currentMarker?.color ?? Colors.grey,
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                )
-                              : Container(
-                                  alignment: Alignment.center,
-                                  height: 25,
-                                  width: 25,
-                                  decoration: BoxDecoration(
-                                    color: widget.currentMarker?.color ?? Colors.grey,
-                                    // borderRadius: BorderRadius.circular(100),
-                                  ),
-                                ),
-                      ],
-                    ),
-                  ),
+                        : Container(
+                            alignment: Alignment.center,
+                            height: 25,
+                            width: 25,
+                            decoration: BoxDecoration(
+                              color: widget.currentMarker?.color ?? Colors.grey,
+                              // borderRadius: BorderRadius.circular(100),
+                            ),
+                          ),
                 ],
               ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class PlaceWidgetController extends GetxController with Utils {}
-
-
 
 // class _PlaceWidgetState extends State<PlaceWidget> {
 //   MarkerModel? currentMarker;
