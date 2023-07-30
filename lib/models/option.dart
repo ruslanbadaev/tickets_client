@@ -1,6 +1,3 @@
-import 'package:tickets/models/price.dart';
-import 'package:tickets/models/plant.dart';
-
 class OptionModel {
   final String id;
   final String name;

@@ -18,7 +18,8 @@ class AppColors {
 
   static final MaterialColor LIGHT = _factoryColor(0xffffffff);
 
-  static final MaterialColor LIGHT_GREY = _factoryColor(0xffc0c5d4);
+  static final MaterialColor LIGHT_GREY = _factoryColor(0xFFECEDF1);
+  static final MaterialColor LIGHT_GREY_M = _factoryColor(0xFFE3E5EE);
 
   static final MaterialColor DARK = _factoryColor(0xff3a3a3a);
 

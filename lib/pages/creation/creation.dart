@@ -144,29 +144,32 @@ class CreationScreenState extends State<CreationScreen> with TickerProviderState
                                                 ),
                                               ],
                                             ),
-                                            subtitle: Row(
-                                              children: [
-                                                Text(
-                                                  'ряд: ${((ticket?.x ?? 0) + 1)}',
-                                                  style: Get.textTheme.bodyText1Bold.copyWith(
-                                                    // color: _currentPrice == price ? price.color : AppColors.DARK,
-                                                    fontWeight: _currentPrice?.name == ticket?.name
-                                                        ? FontWeight.w700
-                                                        : FontWeight.w400,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  'место: ${((ticket?.y ?? 0) + 1)}',
-                                                  style: Get.textTheme.bodyText1Bold.copyWith(
-                                                    // color: _currentPrice == price ? price.color : AppColors.DARK,
-                                                    fontWeight: _currentPrice?.name == ticket?.name
-                                                        ? FontWeight.w700
-                                                        : FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                            subtitle:
+                                                ticket?.type != PointType.object && ticket?.type != PointType.sector
+                                                    ? Row(
+                                                        children: [
+                                                          Text(
+                                                            'ряд: ${((ticket?.x ?? 0) + 1)}',
+                                                            style: Get.textTheme.bodyText1Bold.copyWith(
+                                                              // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                                              fontWeight: _currentPrice?.name == ticket?.name
+                                                                  ? FontWeight.w700
+                                                                  : FontWeight.w400,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(width: 8),
+                                                          Text(
+                                                            'место: ${((ticket?.y ?? 0) + 1)}',
+                                                            style: Get.textTheme.bodyText1Bold.copyWith(
+                                                              // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                                              fontWeight: _currentPrice?.name == ticket?.name
+                                                                  ? FontWeight.w700
+                                                                  : FontWeight.w400,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : null,
                                             trailing: InkWell(
                                               onTap: () {
                                                 _selectedMarkers.remove(ticket);

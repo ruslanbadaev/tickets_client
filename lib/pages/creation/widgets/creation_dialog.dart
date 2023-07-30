@@ -6,7 +6,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 
 import '../../../models/marker.dart';
-import '../../../models/price.dart';
+
 import '../controller.dart';
 
 class CreationDialogWidget extends StatefulWidget {

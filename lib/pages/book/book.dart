@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +34,7 @@ class BookScreenState extends State<BookScreen> with TickerProviderStateMixin {
   int currSeconds = 0;
   bool edition = false;
 
-  MarkerModel? _currentPrice;
+  double _currentPrice = 0;
   final List<MarkerModel> _selectedHereMarkers = [];
 
   BookScreenController controller = Get.put(BookScreenController());
@@ -42,7 +44,18 @@ class BookScreenState extends State<BookScreen> with TickerProviderStateMixin {
     edition = true;
     super.initState();
     _selectedHereMarkers.addAll(widget.selectedMarkers);
+
     animationController = AnimationController(vsync: this);
+    calculatePrice();
+  }
+
+  void calculatePrice() async {
+    _currentPrice = 0;
+    for (MarkerModel? ticket in _selectedHereMarkers) {
+      _currentPrice = _currentPrice + (double.tryParse(ticket!.price!) ?? 0);
+      // await Future.delayed(const Duration(milliseconds: 50));
+      setState(() {});
+    }
   }
 
   @override
@@ -104,36 +117,32 @@ class BookScreenState extends State<BookScreen> with TickerProviderStateMixin {
                                             'цена: (${ticket?.price ?? '?'})',
                                             style: Get.textTheme.bodyText1Bold.copyWith(
                                               // color: _currentPrice == price ? price.color : AppColors.DARK,
-                                              fontWeight: _currentPrice?.name == ticket?.name
-                                                  ? FontWeight.w700
-                                                  : FontWeight.w400,
+                                              fontWeight: FontWeight.w400,
                                             ),
                                           ),
                                         ],
                                       ),
-                                      subtitle: Row(
-                                        children: [
-                                          Text(
-                                            'ряд: ${((ticket?.x ?? 0) + 1)}',
-                                            style: Get.textTheme.bodyText1Bold.copyWith(
-                                              // color: _currentPrice == price ? price.color : AppColors.DARK,
-                                              fontWeight: _currentPrice?.name == ticket?.name
-                                                  ? FontWeight.w700
-                                                  : FontWeight.w400,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            'место: ${((ticket?.y ?? 0) + 1)}',
-                                            style: Get.textTheme.bodyText1Bold.copyWith(
-                                              // color: _currentPrice == price ? price.color : AppColors.DARK,
-                                              fontWeight: _currentPrice?.name == ticket?.name
-                                                  ? FontWeight.w700
-                                                  : FontWeight.w400,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      subtitle: ticket?.type != PointType.object && ticket?.type != PointType.sector
+                                          ? Row(
+                                              children: [
+                                                Text(
+                                                  'ряд: ${((ticket?.x ?? 0) + 1)}',
+                                                  style: Get.textTheme.bodyText1Bold.copyWith(
+                                                    // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  'место: ${((ticket?.y ?? 0) + 1)}',
+                                                  style: Get.textTheme.bodyText1Bold.copyWith(
+                                                    // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : null,
                                       trailing: InkWell(
                                         onTap: () {
                                           if (_selectedHereMarkers.contains(ticket)) {
@@ -141,7 +150,7 @@ class BookScreenState extends State<BookScreen> with TickerProviderStateMixin {
                                           } else {
                                             _selectedHereMarkers.add(ticket!);
                                           }
-
+                                          calculatePrice();
                                           setState(() {});
                                         },
                                         child: _selectedHereMarkers.contains(ticket)
@@ -160,7 +169,7 @@ class BookScreenState extends State<BookScreen> with TickerProviderStateMixin {
                             ],
                           ),
                           Container(
-                            padding: EdgeInsets.all(24),
+                            padding: const EdgeInsets.all(24),
                             decoration: BoxDecoration(
                               color: AppColors.LIGHT,
                               borderRadius: BorderRadius.circular(8),
@@ -169,7 +178,7 @@ class BookScreenState extends State<BookScreen> with TickerProviderStateMixin {
                               children: [
                                 const SizedBox(height: 24),
                                 Text(
-                                  'место:',
+                                  'К оплате: $_currentPrice',
                                   style: Get.textTheme.bodyText1Bold.copyWith(
                                     // color: _currentPrice == price ? price.color : AppColors.DARK,
                                     fontWeight: FontWeight.w400,

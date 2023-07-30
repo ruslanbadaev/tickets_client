@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:xl/xl.dart';
 
 import '../../../models/marker.dart';
-import '../../../models/price.dart';
-import '../../../utils/constants/colors.dart';
 
 class PriceCardWidget extends StatefulWidget {
   final MarkerModel price;
