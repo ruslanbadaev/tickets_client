@@ -65,39 +65,39 @@ class ConcertsScreenState extends State<ConcertsScreen> with TickerProviderState
                             padding: const EdgeInsets.symmetric(horizontal: 18),
                             alignment: Alignment.center,
                             height: 64,
-                            width: 800,
+                            width: 940,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(
-                                  width: 180,
+                                  width: 260,
                                   child: Text(
                                     'Название',
                                     style: Get.textTheme.bodyText1Bold,
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 180,
+                                  width: 250,
                                   child: Text(
-                                    'Дата',
+                                    'Дата/Время',
                                     style: Get.textTheme.bodyText1Bold,
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 180,
+                                  width: 260,
                                   child: Text(
                                     'Место',
                                     style: Get.textTheme.bodyText1Bold,
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 90,
-                                  child: Text(
-                                    'Время',
-                                    style: Get.textTheme.bodyText1Bold,
-                                  ),
-                                ),
-                                SizedBox(width: 133),
+                                // SizedBox(
+                                //   width: 90,
+                                //   child: Text(
+                                //     'Время',
+                                //     style: Get.textTheme.bodyText1Bold,
+                                //   ),
+                                // ),
+                                SizedBox(width: 123),
                               ],
                             ),
                           ),
@@ -125,39 +125,39 @@ class ConcertsScreenState extends State<ConcertsScreen> with TickerProviderState
                                       padding: const EdgeInsets.symmetric(horizontal: 18),
                                       alignment: Alignment.center,
                                       height: 96,
-                                      width: 800,
+                                      width: 940,
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           SizedBox(
-                                            width: 180,
+                                            width: 260,
                                             child: Text(
                                               concert.name,
                                               style: Get.textTheme.bodyText1Bold,
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 180,
+                                            width: 250,
                                             child: Text(
                                               DateFormatter.formattedDateTime(concert.createdAt!,
-                                                  pattern: 'dd.MM.yyyy'),
+                                                  pattern: 'dd.MM.yyyy hh:mm'),
                                               style: Get.textTheme.bodyText1,
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 180,
+                                            width: 260,
                                             child: Text(
                                               concert.place.toString(),
                                               style: Get.textTheme.bodyText1Bold,
                                             ),
                                           ),
-                                          SizedBox(
-                                            width: 90,
-                                            child: Text(
-                                              DateFormatter.formattedDateTime(concert.createdAt!, pattern: 'hh:mm'),
-                                              style: Get.textTheme.bodyText1Bold,
-                                            ),
-                                          ),
+                                          // SizedBox(
+                                          //   width: 90,
+                                          //   child: Text(
+                                          //     DateFormatter.formattedDateTime(concert.createdAt!, pattern: 'hh:mm'),
+                                          //     style: Get.textTheme.bodyText1Bold,
+                                          //   ),
+                                          // ),
                                           Card(
                                             color: AppColors.LIGHT_GREEN,
                                             child: SizedBox(

@@ -280,7 +280,7 @@ class CreationScreenState extends State<CreationScreen> with TickerProviderState
                                               Text(
                                                 price.name,
                                                 style: Get.textTheme.bodyText1Bold.copyWith(
-                                                  color: AppColors.LIGHT_GREY.withOpacity(1),
+                                                  color: AppColors.PRIMARY.withOpacity(1),
                                                   fontWeight:
                                                       _currentPrice == price ? FontWeight.w700 : FontWeight.w400,
                                                 ),

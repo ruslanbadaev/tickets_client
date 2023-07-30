@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
 TextStyle _baseTextStyle = GoogleFonts.comfortaa();
-TextStyle _headerTextStyle = GoogleFonts.architectsDaughter();
+TextStyle _headerTextStyle = GoogleFonts.comfortaa();
+// TextStyle _headerTextStyle = GoogleFonts.architectsDaughter();
 
 TextStyle _w400head = _headerTextStyle.copyWith(
   fontWeight: FontWeight.w400,

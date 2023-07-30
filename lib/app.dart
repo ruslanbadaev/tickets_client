@@ -1,7 +1,3 @@
-import 'package:tickets/models/pack.dart';
-import 'package:tickets/pages/concerts/concerts.dart';
-import 'package:tickets/pages/generate/generate.dart';
-import 'package:tickets/utils/constants/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,10 +5,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import 'controller.dart';
-
-import 'pages/creation/creation.dart';
-import 'pages/gallery/gallery.dart';
-import 'pages/home/home.dart';
+import 'pages/concerts/concerts.dart';
 import 'utils/constants/images.dart';
 import 'widgets/no_internet_connection.dart';
 

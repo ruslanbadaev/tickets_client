@@ -131,7 +131,7 @@ class ConcertModel {
           column: data?['column'].toString(),
           grid: data?['grid'],
           prices: data?['prices'],
-          buyer: BuyerModel.fromJson(data?['buyer']),
+          buyer: data?['buyer'] == null ? null : BuyerModel.fromJson(data?['buyer']),
         ),
       );
     } catch (e) {
