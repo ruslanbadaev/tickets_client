@@ -4,8 +4,9 @@ import 'package:animate_do/animate_do.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tickets/models/concert.dart';
+import 'package:tickets/pages/book/book.dart';
 
-import '../../mixins/utils.dart';
 import '../../models/marker.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/theme/app_text_theme.dart';
@@ -15,21 +16,23 @@ import '../../widgets/lite_loading_screen.dart';
 import 'controller.dart';
 
 class CreationScreen extends StatefulWidget {
-  final String id;
-  final String name;
-  final String date;
-  final String place;
-  final int rows;
-  final int columns;
+  final ConcertModel concert;
+  // final String id;
+  // final String name;
+  // final String date;
+  // final String place;
+  // final int rows;
+  // final int columns;
 
   const CreationScreen({
     Key? key,
-    required this.id,
-    required this.name,
-    required this.date,
-    required this.place,
-    required this.rows,
-    required this.columns,
+    // required this.id,
+    // required this.name,
+    // required this.date,
+    // required this.place,
+    // required this.rows,
+    // required this.columns,
+    required this.concert,
   }) : super(key: key);
 
   @override
@@ -52,13 +55,13 @@ class CreationScreenState extends State<CreationScreen> with TickerProviderState
     edition = true;
     super.initState();
     initGrid();
-    controller.getAllMarkersByConcertId(widget.id);
-    controller.getGridByConcertId(widget.id);
+    controller.getAllMarkersByConcertId(widget.concert.id);
+    controller.getGridByConcertId(widget.concert.id);
     animationController = AnimationController(vsync: this);
   }
 
   void initGrid() {
-    controller.generateGrid(widget.rows, widget.columns);
+    controller.generateGrid(widget.concert.grid?.length ?? 0, widget.concert.grid?[0].length ?? 0);
   }
 
   @override
@@ -84,7 +87,8 @@ class CreationScreenState extends State<CreationScreen> with TickerProviderState
                 //   });
                 // },
                 child: CustomScaffold(
-                  appBar: CustomAppBar(titleString: '${widget.name} - ${widget.date} (${widget.place})'),
+                  appBar: CustomAppBar(
+                      titleString: '${widget.concert.name} - ${widget.concert.createdAt} (${widget.concert.place})'),
                   backgroundColor: AppColors.WHITE,
                   body: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
@@ -102,31 +106,140 @@ class CreationScreenState extends State<CreationScreen> with TickerProviderState
                                 // color: AppColors.GREEN,
                                 child: Column(
                                   children: [
+                                    const SizedBox(height: 24),
                                     for (MarkerModel? ticket in _selectedMarkers)
                                       FadeInLeft(
                                         duration: const Duration(milliseconds: 300),
                                         child: Container(
-                                          width: 140,
-                                          height: 48,
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                ticket?.name ?? '?',
-                                                style: Get.textTheme.bodyText1Bold.copyWith(
-                                                  // color: _currentPrice == price ? price.color : AppColors.DARK,
-                                                  fontWeight: _currentPrice == null ? FontWeight.w700 : FontWeight.w400,
-                                                ),
-                                              ),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                '(${ticket?.price ?? '?'})',
-                                                style: Get.textTheme.bodyText1Bold.copyWith(
-                                                  // color: _currentPrice == price ? price.color : AppColors.DARK,
-                                                  fontWeight: _currentPrice == null ? FontWeight.w700 : FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
+                                          // padding: EdgeInsets.all(8),
+                                          margin: const EdgeInsets.all(8),
+                                          width: 280,
+                                          height: 64,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.WHITE,
+                                            borderRadius: BorderRadius.circular(8),
+                                            border: Border.all(
+                                              color: ticket?.color ?? AppColors.DARK,
+                                            ),
                                           ),
+                                          child: ListTile(
+                                            title: Row(
+                                              children: [
+                                                Text(
+                                                  ticket?.name ?? '?',
+                                                  style: Get.textTheme.bodyText1Bold.copyWith(
+                                                    // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  'цена: (${ticket?.price ?? '?'})',
+                                                  style: Get.textTheme.bodyText1Bold.copyWith(
+                                                    // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                                    fontWeight: _currentPrice?.name == ticket?.name
+                                                        ? FontWeight.w700
+                                                        : FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            subtitle: Row(
+                                              children: [
+                                                Text(
+                                                  'ряд: ${((ticket?.x ?? 0) + 1)}',
+                                                  style: Get.textTheme.bodyText1Bold.copyWith(
+                                                    // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                                    fontWeight: _currentPrice?.name == ticket?.name
+                                                        ? FontWeight.w700
+                                                        : FontWeight.w400,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  'место: ${((ticket?.y ?? 0) + 1)}',
+                                                  style: Get.textTheme.bodyText1Bold.copyWith(
+                                                    // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                                    fontWeight: _currentPrice?.name == ticket?.name
+                                                        ? FontWeight.w700
+                                                        : FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            trailing: InkWell(
+                                              onTap: () {
+                                                _selectedMarkers.remove(ticket);
+                                                setState(() {});
+                                              },
+                                              child: const Icon(
+                                                Icons.delete_rounded,
+                                                color: AppColors.RED,
+                                              ),
+                                            ),
+                                          ),
+
+                                          // Row(
+
+                                          //   children: [
+                                          //     Column(
+                                          //       children: [
+                                          //         Row(
+                                          //           children: [
+                                          //             Text(
+                                          //               ticket?.name ?? '?',
+                                          //               style: Get.textTheme.bodyText1Bold.copyWith(
+                                          //                 // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                          //                 fontWeight:
+                                          //                     _currentPrice == null ? FontWeight.w700 : FontWeight.w400,
+                                          //               ),
+                                          //             ),
+                                          //             SizedBox(width: 8),
+                                          //             Text(
+                                          //               'цена: (${ticket?.price ?? '?'})',
+                                          //               style: Get.textTheme.bodyText1Bold.copyWith(
+                                          //                 // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                          //                 fontWeight:
+                                          //                     _currentPrice == null ? FontWeight.w700 : FontWeight.w400,
+                                          //               ),
+                                          //             ),
+                                          //           ],
+                                          //         ),
+                                          //         Row(
+                                          //           children: [
+                                          //             Text(
+                                          //               'ряд: ${((ticket?.x ?? 0) + 1)}',
+                                          //               style: Get.textTheme.bodyText1Bold.copyWith(
+                                          //                 // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                          //                 fontWeight:
+                                          //                     _currentPrice == null ? FontWeight.w700 : FontWeight.w400,
+                                          //               ),
+                                          //             ),
+                                          //             SizedBox(width: 8),
+                                          //             Text(
+                                          //               'место: ${((ticket?.y ?? 0) + 1)}',
+                                          //               style: Get.textTheme.bodyText1Bold.copyWith(
+                                          //                 // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                          //                 fontWeight:
+                                          //                     _currentPrice == null ? FontWeight.w700 : FontWeight.w400,
+                                          //               ),
+                                          //             ),
+                                          //           ],
+                                          //         ),
+                                          //       ],
+                                          //     ),
+                                          //     InkWell(
+                                          //       onTap: () {
+                                          //         _selectedMarkers.remove(ticket);
+                                          //         setState(() {});
+                                          //       },
+                                          //       child: Icon(
+                                          //         Icons.delete_rounded,
+                                          //         color: AppColors.RED,
+                                          //       ),
+                                          //     ),
+                                          //   ],
+                                          // ),
                                         ),
                                       ),
                                   ],
@@ -231,9 +344,13 @@ class CreationScreenState extends State<CreationScreen> with TickerProviderState
                                                     controller.hoverItem(marker);
                                                   },
                                                   onSelect: (marker) {
-                                                    if (_selectedMarkers.contains(controller.grid[incrX][incrY])) {
-                                                      _selectedMarkers.remove(controller.grid[incrX][incrY]);
-                                                    } else {
+                                                    if (controller.grid[incrX][incrY].type == PointType.sit) {
+                                                      if (_selectedMarkers.contains(controller.grid[incrX][incrY])) {
+                                                        _selectedMarkers.remove(controller.grid[incrX][incrY]);
+                                                      } else {
+                                                        _selectedMarkers.add(controller.grid[incrX][incrY]);
+                                                      }
+                                                    } else if (controller.grid[incrX][incrY].type == PointType.sector) {
                                                       _selectedMarkers.add(controller.grid[incrX][incrY]);
                                                     }
                                                     setState(() {});
@@ -253,15 +370,18 @@ class CreationScreenState extends State<CreationScreen> with TickerProviderState
                                                     controller.hoverItem(marker);
                                                   },
                                                   onSelect: (marker) {
-                                                    // controller.setGridElement(
+                                                    // controller.setGridElement(se
                                                     //   incrX,
                                                     //   incrY,
                                                     //   marker,
                                                     // );
-
-                                                    if (_selectedMarkers.contains(controller.grid[incrX][incrY])) {
-                                                      _selectedMarkers.remove(controller.grid[incrX][incrY]);
-                                                    } else {
+                                                    if (controller.grid[incrX][incrY].type == PointType.sit) {
+                                                      if (_selectedMarkers.contains(controller.grid[incrX][incrY])) {
+                                                        _selectedMarkers.remove(controller.grid[incrX][incrY]);
+                                                      } else {
+                                                        _selectedMarkers.add(controller.grid[incrX][incrY]);
+                                                      }
+                                                    } else if (controller.grid[incrX][incrY].type == PointType.sector) {
                                                       _selectedMarkers.add(controller.grid[incrX][incrY]);
                                                     }
                                                     setState(() {});
@@ -291,6 +411,29 @@ class CreationScreenState extends State<CreationScreen> with TickerProviderState
                       ),
                     ),
                   ),
+                  floatingActionButton: _selectedMarkers.isEmpty
+                      ? null
+                      : FloatingActionButton.extended(
+                          onPressed: () {
+                            Get.to(
+                              BookScreen(
+                                selectedConcert: widget.concert,
+                                selectedMarkers: _selectedMarkers,
+                              ),
+                            );
+                          },
+                          label: Row(
+                            children: [
+                              Text(
+                                'Забронировать',
+                                style: Get.textTheme.bodyText1Bold.copyWith(
+                                  color: AppColors.WHITE,
+                                  // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                  fontWeight: _currentPrice == null ? FontWeight.w700 : FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          )),
                 ),
               );
       },
@@ -390,99 +533,3 @@ class _PlaceWidgetState extends State<PlaceWidget> {
     );
   }
 }
-
-class PlaceWidgetController extends GetxController with Utils {}
-
-// class _PlaceWidgetState extends State<PlaceWidget> {
-//   MarkerModel? currentMarker;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       child: MouseRegion(
-//         onEnter: (event) {
-//           if (widget.editing) {
-//             setState(() {
-//               currentMarker = widget.marker;
-//             });
-//           } else {
-//             widget.onHover(currentMarker);
-//           }
-//         },
-//         onHover: (event) {},
-//         cursor: SystemMouseCursors.grab,
-//         child: widget.editing
-//             ? SizedBox(
-//                 height: 25,
-//                 width: 25,
-//                 // margin: EdgeInsets.all(0),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     if (currentMarker == null)
-//                       Container(
-//                         alignment: Alignment.center,
-//                         height: 25,
-//                         width: 25,
-//                         decoration: BoxDecoration(
-//                           border: Border.all(),
-//                           borderRadius: BorderRadius.circular(4),
-//                         ),
-//                       )
-//                     else
-//                       Container(
-//                         alignment: Alignment.center,
-//                         height: 15,
-//                         width: 15,
-//                         decoration: BoxDecoration(
-//                           color: currentMarker?.color ?? Colors.grey,
-//                           borderRadius: BorderRadius.circular(100),
-//                         ),
-//                       ),
-//                   ],
-//                 ),
-//               )
-//             : SizedBox(
-//                 height: 25,
-//                 width: 25,
-//                 // margin: EdgeInsets.all(0),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     if (currentMarker == null)
-//                       Container(
-//                         alignment: Alignment.center,
-//                         height: 7,
-//                         width: 7,
-//                         decoration: BoxDecoration(
-//                           color: currentMarker?.color ?? Colors.grey,
-//                           borderRadius: BorderRadius.circular(100),
-//                         ),
-//                       )
-//                     else
-//                       currentMarker?.type == PointType.sit
-//                           ? Container(
-//                               alignment: Alignment.center,
-//                               height: 15,
-//                               width: 15,
-//                               decoration: BoxDecoration(
-//                                 color: currentMarker?.color ?? Colors.grey,
-//                                 borderRadius: BorderRadius.circular(100),
-//                               ),
-//                             )
-//                           : Container(
-//                               alignment: Alignment.center,
-//                               height: 25,
-//                               width: 25,
-//                               decoration: BoxDecoration(
-//                                 color: currentMarker?.color ?? Colors.grey,
-//                                 // borderRadius: BorderRadius.circular(100),
-//                               ),
-//                             ),
-//                   ],
-//                 ),
-//               ),
-//       ),
-//     );
-//   }
-// }

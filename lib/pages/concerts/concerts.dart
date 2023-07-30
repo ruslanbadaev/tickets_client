@@ -108,12 +108,13 @@ class ConcertsScreenState extends State<ConcertsScreen> with TickerProviderState
                                   onTap: () {
                                     Get.to(
                                       CreationScreen(
-                                        id: concert.id,
-                                        name: concert.name,
-                                        date: concert.createdAt.toString(),
-                                        place: concert.place,
-                                        rows: int.tryParse(concert.row ?? '') ?? 10,
-                                        columns: int.tryParse(concert.column ?? '') ?? 10,
+                                        concert: concert,
+                                        // id: concert.id,
+                                        // name: concert.name,
+                                        // date: concert.createdAt.toString(),
+                                        // place: concert.place,
+                                        // rows: int.tryParse(concert.row ?? '') ?? 10,
+                                        // columns: int.tryParse(concert.column ?? '') ?? 10,
                                       ),
                                     );
                                   },
