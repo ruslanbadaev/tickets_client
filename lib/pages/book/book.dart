@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -49,10 +50,22 @@ class BookScreenState extends State<BookScreen> with TickerProviderStateMixin {
     calculatePrice();
   }
 
+  double? tryParse(String price) {
+    double? parsedPrice;
+    log(price.replaceAll(RegExp(r'[^0-9\.]'), ''), name: 'replaced()()()');
+    parsedPrice = double.tryParse(price.replaceAll(RegExp(r'[^0-9\.]'), ''));
+    return parsedPrice;
+  }
+
   void calculatePrice() async {
     _currentPrice = 0;
     for (MarkerModel? ticket in _selectedHereMarkers) {
-      _currentPrice = _currentPrice + (double.tryParse(ticket!.price!) ?? 0);
+      double? parsedPrice = double.tryParse(ticket!.price!);
+
+      parsedPrice ??= tryParse(ticket.price!);
+
+      _currentPrice = _currentPrice + (parsedPrice ?? 0);
+      // _currentPrice = _currentPrice + (double.tryParse(ticket.price!) ?? 0);
       // await Future.delayed(const Duration(milliseconds: 50));
       setState(() {});
     }
@@ -71,9 +84,10 @@ class BookScreenState extends State<BookScreen> with TickerProviderStateMixin {
             : GestureDetector(
                 child: CustomScaffold(
                   appBar: CustomAppBar(
-                      titleString:
-                          '${widget.selectedConcert.name} - ${widget.selectedConcert.createdAt} (${widget.selectedConcert.place})'),
-                  backgroundColor: AppColors.WHITE,
+                    titleString:
+                        '${widget.selectedConcert.name} - ${widget.selectedConcert.createdAt} (${widget.selectedConcert.place})',
+                  ),
+                  // backgroundColor: AppColors.WHITE,
                   body: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: SingleChildScrollView(
@@ -81,112 +95,123 @@ class BookScreenState extends State<BookScreen> with TickerProviderStateMixin {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Column(
-                            mainAxisSize: MainAxisSize.min,
-                            // crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const SizedBox(height: 24),
-                              for (MarkerModel? ticket in widget.selectedMarkers)
-                                FadeInLeft(
-                                  duration: const Duration(milliseconds: 300),
-                                  child: Container(
-                                    // padding: EdgeInsets.all(8),
-                                    margin: const EdgeInsets.all(8),
-                                    width: 280,
-                                    height: 64,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.WHITE,
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                        width: _selectedHereMarkers.contains(ticket) ? 2 : 1,
-                                        color: ticket?.color ?? AppColors.DARK,
-                                      ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 12,
+                                      offset: const Offset(5, 7),
+                                      color: AppColors.DARK.withOpacity(.1),
                                     ),
-                                    child: ListTile(
-                                      title: Row(
-                                        children: [
-                                          Text(
-                                            ticket?.name ?? '?',
-                                            style: Get.textTheme.bodyText1Bold.copyWith(
-                                              // color: _currentPrice == price ? price.color : AppColors.DARK,
-                                              fontWeight: FontWeight.w700,
-                                            ),
+                                  ],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: Container(
+                                    width: 460,
+                                    // padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 32),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.LIGHT,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SizedBox(height: 32),
+                                        Text(
+                                          'Оплата',
+                                          style: Get.textTheme.headline2Bold.copyWith(
+                                            // color: _currentPrice == price ? price.color : AppColors.DARK,
+                                            fontWeight: FontWeight.w900,
                                           ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            'цена: (${ticket?.price ?? '?'})',
-                                            style: Get.textTheme.bodyText1Bold.copyWith(
-                                              // color: _currentPrice == price ? price.color : AppColors.DARK,
-                                              fontWeight: FontWeight.w400,
-                                            ),
+                                        ),
+                                        const SizedBox(height: 24),
+                                        for (MarkerModel? ticket in widget.selectedMarkers)
+                                          Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    '${ticket?.name} - ',
+                                                    style: Get.textTheme.bodyText1!.copyWith(),
+                                                  ),
+                                                  Text(
+                                                    '${ticket?.price}',
+                                                    style: Get.textTheme.bodyText1Bold.copyWith(
+                                                      fontWeight: FontWeight.w900,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                widget.selectedMarkers.last == ticket ? '=' : '+',
+                                                style: Get.textTheme.bodyText1Bold.copyWith(
+                                                  fontWeight: widget.selectedMarkers.last == ticket
+                                                      ? FontWeight.w700
+                                                      : FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      subtitle: ticket?.type != PointType.object && ticket?.type != PointType.sector
-                                          ? Row(
+                                        const SizedBox(height: 24),
+                                        Text(
+                                          'К оплате: $_currentPrice',
+                                          style: Get.textTheme.bodyText1!.copyWith(
+                                            decoration: TextDecoration.underline,
+                                          ),
+                                        ),
+                                        SizedBox(height: 32),
+                                        InkWell(
+                                          onTap: () {},
+                                          child: Container(
+                                            height: 64,
+                                            color: AppColors.DARK,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  'ряд: ${((ticket?.x ?? 0) + 1)}',
-                                                  style: Get.textTheme.bodyText1Bold.copyWith(
-                                                    // color: _currentPrice == price ? price.color : AppColors.DARK,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
+                                                  'Оплатить PayPal',
+                                                  style: Get.textTheme.bodyText1!.copyWith(color: AppColors.WHITE),
                                                 ),
-                                                const SizedBox(width: 8),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {},
+                                          child: Container(
+                                            height: 72,
+                                            color: AppColors.WHITE,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
                                                 Text(
-                                                  'место: ${((ticket?.y ?? 0) + 1)}',
-                                                  style: Get.textTheme.bodyText1Bold.copyWith(
-                                                    // color: _currentPrice == price ? price.color : AppColors.DARK,
-                                                    fontWeight: FontWeight.w400,
+                                                  'Оплатить перевом на карту',
+                                                  style: Get.textTheme.bodyText1!.copyWith(
+                                                    color: AppColors.DARK,
+                                                    fontWeight: FontWeight.w900,
+                                                    decoration: TextDecoration.underline,
                                                   ),
                                                 ),
                                               ],
-                                            )
-                                          : null,
-                                      trailing: InkWell(
-                                        onTap: () {
-                                          if (_selectedHereMarkers.contains(ticket)) {
-                                            _selectedHereMarkers.remove(ticket);
-                                          } else {
-                                            _selectedHereMarkers.add(ticket!);
-                                          }
-                                          calculatePrice();
-                                          setState(() {});
-                                        },
-                                        child: _selectedHereMarkers.contains(ticket)
-                                            ? const Icon(
-                                                Icons.delete_rounded,
-                                                color: AppColors.RED,
-                                              )
-                                            : Icon(
-                                                Icons.add_rounded,
-                                                color: AppColors.GREEN,
-                                              ),
-                                      ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 12),
+                                      ],
                                     ),
                                   ),
                                 ),
+                              ),
+                              SizedBox(height: 128),
                             ],
                           ),
-                          Container(
-                            padding: const EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: AppColors.LIGHT,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 24),
-                                Text(
-                                  'К оплате: $_currentPrice',
-                                  style: Get.textTheme.bodyText1Bold.copyWith(
-                                    // color: _currentPrice == price ? price.color : AppColors.DARK,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
                         ],
                       ),
                     ),

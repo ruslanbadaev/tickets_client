@@ -73,6 +73,7 @@ dependencies:
   remove_background: 0.0.1
   flutter_painter: 1.0.1
   syncfusion_flutter_datepicker: 20.3.61
+  adaptive_scrollbar: ^2.1.2
 
 dev_dependencies:
   flutter_test:

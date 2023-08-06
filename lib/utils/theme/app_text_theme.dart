@@ -77,7 +77,7 @@ class AppTextTheme {
     button: _w600.copyWith(
       fontSize: 16,
     ),
-    subtitle1: _w400.copyWith(
+    subtitle1: _w600.copyWith(
       fontSize: 7,
       letterSpacing: _letterSpacing,
     ),
